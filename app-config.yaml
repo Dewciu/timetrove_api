@@ -4,6 +4,7 @@ database:
   user: user
   password: password
   name: timetrove
-server: 
+server:
+  host: localhost
   port: 8080
   mode: debug
