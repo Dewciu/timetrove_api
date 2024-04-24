@@ -9,7 +9,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const FILE_PATH = "app-config.yaml"
+const CONF_FILE_PATH = "app-config.yaml"
 
 type Config struct {
 	Database struct {
@@ -20,6 +20,7 @@ type Config struct {
 		Name     string `yaml:"name"`
 	}
 	Server struct {
+		Host string `yaml:"host"`
 		Port int    `yaml:"port"`
 		Mode string `yaml:"mode"`
 	}
@@ -27,9 +28,9 @@ type Config struct {
 
 // getDataFromConfig reads the contents of a file specified by file path and returns the data as a byte slice.
 // If an error occurs while opening or reading the file, it returns nil and the error.
-func GetConfiguration() (*Config, error) {
+func GetConfig() (*Config, error) {
 	log.Debug("Reading configuration...")
-	file, err := os.Open(FILE_PATH)
+	file, err := os.Open(CONF_FILE_PATH)
 	if err != nil {
 		log.Errorf("Failed to open file: %v", err)
 		return nil, err
