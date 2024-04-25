@@ -2,45 +2,37 @@ package main
 
 import (
 	"fmt"
-	"net/url"
 
 	"github.com/dewciu/timetrove_api/pkg/config"
+	"github.com/dewciu/timetrove_api/pkg/database"
+	"github.com/dewciu/timetrove_api/pkg/users"
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
 	conf, err := config.GetConfig()
 
 	if err != nil {
-		log.Panicf("Failed to get configuration: %v", err)
+		logrus.Panicf("Failed to get configuration: %v", err)
 	}
 
 	router := gin.Default()
 
-	dsn := url.URL{
-		User:     url.UserPassword(conf.Database.User, conf.Database.Password),
-		Scheme:   "postgres",
-		Host:     fmt.Sprintf("%s:%d", conf.Database.Host, conf.Database.Port),
-		Path:     conf.Database.Name,
-		RawQuery: (&url.Values{"sslmode": []string{"disable"}}).Encode(),
+	if err = database.Connect(conf); err != nil {
+		msg := fmt.Sprintf("Failed to connect to database: %v", err)
+		panic(msg)
 	}
 
-	db, err := gorm.Open(postgres.New(postgres.Config{DSN: dsn.String()}), &gorm.Config{})
+	defer database.Disconnect()
 
-	defer func() {
-		dbInstance, _ := db.DB()
-		if err := dbInstance.Close(); err != nil {
-			log.Errorf("Failed to close database connection: %v", err)
-		}
-	}()
-
-	if err != nil {
-		log.Panicf("Failed to connect to database: %v", err)
+	if err = database.Migrate(); err != nil {
+		msg := fmt.Sprintf("Failed to migrate database: %v", err)
+		panic(msg)
 	}
 
-	// Configure database models and migrations here
-	router.Run(fmt.Sprintf("%s:%d", conf.Server.Host, conf.Server.Port))
+	database.DB.Create(&users.User{Username: "admin442", Email: "debil222@gmail.com", Password: "admin1234"})
+
+	hostname := fmt.Sprintf("%s:%d", conf.Server.Host, conf.Server.Port)
+	router.Run(hostname)
 }
