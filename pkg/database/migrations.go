@@ -1,12 +1,14 @@
 package database
 
 import (
-	"github.com/dewciu/timetrove_api/pkg/address"
-	"github.com/dewciu/timetrove_api/pkg/users"
+	"github.com/dewciu/timetrove_api/pkg/database/models"
 )
 
 func Migrate() error {
-	if err := DB.AutoMigrate(&users.User{}, &address.Address{}); err != nil {
+	if err := DB.AutoMigrate(
+		&models.User{},
+		&models.Address{},
+	); err != nil {
 		return err
 	}
 

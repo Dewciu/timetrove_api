@@ -5,7 +5,7 @@ import (
 
 	"github.com/dewciu/timetrove_api/pkg/config"
 	"github.com/dewciu/timetrove_api/pkg/database"
-	"github.com/gin-gonic/gin"
+	"github.com/dewciu/timetrove_api/pkg/routes"
 	"github.com/sirupsen/logrus"
 )
 
@@ -16,7 +16,7 @@ func main() {
 		logrus.Panicf("Failed to get configuration: %v", err)
 	}
 
-	router := gin.Default()
+	router := routes.SetupRouter()
 
 	if err = database.Connect(conf); err != nil {
 		msg := fmt.Sprintf("Failed to connect to database: %v", err)
