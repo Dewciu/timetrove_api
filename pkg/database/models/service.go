@@ -1,11 +1,7 @@
-package services
-
-import (
-	"github.com/dewciu/timetrove_api/pkg/common"
-)
+package models
 
 type Service struct {
-	common.BaseModel
+	BaseModel
 	Name        string `json:"name"`
 	Description string `json:"description"`
 }

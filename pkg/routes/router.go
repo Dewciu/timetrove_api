@@ -12,10 +12,9 @@ func SetupRouter() *gin.Engine {
 	r := routes{
 		router: gin.Default(),
 	}
-	// Add your routes here
-	v1 := r.router.Group("/v1")
 
+	v1 := r.router.Group("/api/v1")
+	r.addSwaggerRoutes(v1)
 	r.addUsersRoutes(v1)
-
 	return r.router
 }
