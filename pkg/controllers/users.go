@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	_ "github.com/dewciu/timetrove_api/pkg/docs"
+	_ "github.com/dewciu/timetrove_api/docs"
 
 	"github.com/dewciu/timetrove_api/pkg/database"
 	"github.com/dewciu/timetrove_api/pkg/database/models"

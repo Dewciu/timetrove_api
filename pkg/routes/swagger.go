@@ -8,7 +8,5 @@ import (
 
 func (r routes) addSwaggerRoutes(rg *gin.RouterGroup) {
 	swag := rg.Group("/swagger")
-	{
-		swag.GET("/*any", swagger.WrapHandler(files.Handler))
-	}
+	swag.GET("/*any", swagger.WrapHandler(files.Handler))
 }

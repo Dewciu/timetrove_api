@@ -8,7 +8,7 @@ import (
 	"github.com/dewciu/timetrove_api/pkg/routes"
 	"github.com/sirupsen/logrus"
 
-	_ "github.com/dewciu/timetrove_api/pkg/docs"
+	_ "github.com/dewciu/timetrove_api/docs"
 )
 
 // @title TimeTrove API

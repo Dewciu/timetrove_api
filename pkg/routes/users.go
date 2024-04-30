@@ -1,8 +1,8 @@
 package routes
 
 import (
+	_ "github.com/dewciu/timetrove_api/docs"
 	"github.com/dewciu/timetrove_api/pkg/controllers"
-	_ "github.com/dewciu/timetrove_api/pkg/docs"
 	"github.com/gin-gonic/gin"
 )
 
