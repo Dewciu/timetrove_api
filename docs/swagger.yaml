@@ -42,10 +42,26 @@ paths:
       - application/json
       responses:
         "200":
-          description: user
+          description: Returns list of users
+          schema:
+            items:
+              $ref: '#/definitions/User'
+            type: array
+      summary: Get Users
+      tags:
+      - user
+    post:
+      consumes:
+      - application/json
+      description: Creates single user in database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Returns Created User
           schema:
             $ref: '#/definitions/User'
-      summary: Ping example
+      summary: Create User
       tags:
       - user
 schemes:

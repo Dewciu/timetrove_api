@@ -1,7 +1,6 @@
-package serializers
+package addresses
 
 import (
-	"github.com/dewciu/timetrove_api/pkg/database/models"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -15,7 +14,7 @@ type AddressResponse struct {
 
 type AddressSerializer struct {
 	C *gin.Context
-	models.Address
+	AddressModel
 }
 
 func (s *AddressSerializer) Response() AddressResponse {

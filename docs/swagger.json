@@ -33,10 +33,34 @@
                 "tags": [
                     "user"
                 ],
-                "summary": "Ping example",
+                "summary": "Get Users",
                 "responses": {
                     "200": {
-                        "description": "user",
+                        "description": "Returns list of users",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/User"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates single user in database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Create User",
+                "responses": {
+                    "200": {
+                        "description": "Returns Created User",
                         "schema": {
                             "$ref": "#/definitions/User"
                         }

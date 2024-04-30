@@ -1,25 +1,25 @@
-package serializers
+package users
 
 import (
-	"github.com/dewciu/timetrove_api/pkg/database/models"
+	"github.com/dewciu/timetrove_api/pkg/addresses"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
 type UserResponse struct {
-	ID       uuid.UUID       `json:"id"`
-	Username string          `json:"username"`
-	Email    string          `json:"email"`
-	Address  AddressResponse `json:"address"`
+	ID       uuid.UUID                 `json:"id"`
+	Username string                    `json:"username"`
+	Email    string                    `json:"email"`
+	Address  addresses.AddressResponse `json:"address"`
 } //@name User
 
 type UserSerializer struct {
 	C *gin.Context
-	models.User
+	UserModel
 }
 
 func (s *UserSerializer) Response() UserResponse {
-	addressSerializer := AddressSerializer{s.C, s.Address}
+	addressSerializer := addresses.AddressSerializer{s.C, s.Address}
 	response := UserResponse{
 		ID:       s.ID,
 		Username: s.Username,
@@ -32,7 +32,7 @@ func (s *UserSerializer) Response() UserResponse {
 
 type UsersSerializer struct {
 	C     *gin.Context
-	Users []models.User
+	Users []UserModel
 }
 
 func (s *UsersSerializer) Response() []UserResponse {
