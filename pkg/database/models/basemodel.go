@@ -8,11 +8,10 @@ import (
 )
 
 type BaseModel struct {
-	gorm.Model
-	ID        uuid.UUID      `gorm:"primaryKey" json:"id"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	ID        uuid.UUID `gorm:"primaryKey" json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	DeletedAt time.Time `gorm:"index" json:"deleted_at"`
 }
 
 func (b *BaseModel) BeforeCreate(tx *gorm.DB) error {
@@ -28,9 +27,6 @@ func (b *BaseModel) BeforeUpdate(tx *gorm.DB) error {
 }
 
 func (b *BaseModel) BeforeDelete(tx *gorm.DB) error {
-	b.DeletedAt = gorm.DeletedAt{
-		Time:  time.Now(),
-		Valid: true,
-	}
+	b.DeletedAt = time.Now()
 	return nil
 }

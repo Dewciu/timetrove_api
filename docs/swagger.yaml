@@ -1,4 +1,25 @@
 basePath: /api/v1
+definitions:
+  Address:
+    properties:
+      city:
+        type: string
+      state:
+        type: string
+      street:
+        type: string
+    type: object
+  User:
+    properties:
+      address:
+        $ref: '#/definitions/Address'
+      email:
+        type: string
+      id:
+        type: string
+      username:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -11,7 +32,22 @@ info:
   termsOfService: http://swagger.io/terms/
   title: TimeTrove API
   version: "1.0"
-paths: {}
+paths:
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves all users from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: user
+          schema:
+            $ref: '#/definitions/User'
+      summary: Ping example
+      tags:
+      - user
 schemes:
 - http
 - https

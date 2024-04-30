@@ -5,23 +5,29 @@ import (
 
 	_ "github.com/dewciu/timetrove_api/docs"
 
-	"github.com/dewciu/timetrove_api/pkg/database"
-	"github.com/dewciu/timetrove_api/pkg/database/models"
+	"github.com/dewciu/timetrove_api/pkg/database/queries"
+	"github.com/dewciu/timetrove_api/pkg/serializers"
 	"github.com/gin-gonic/gin"
 )
 
+// @BasePath /api/v1
+
+// GetAllUsers godoc
 // @Summary Ping example
-// @Description This is a ping example
-// @scheme http
+// @Description Retrieves all users from the database
 // @Tags user
 // @Accept json
 // @Produce json
-// @Success 200 {string} string "pong"
+// @Success 200 {object} serializers.UserResponse "user"
+// @Router /users [get]
 func GetAllUsers(c *gin.Context) {
-	var users []models.User
-	if err := database.DB.Find(&users).Error; err != nil {
+	users, err := queries.GetAllUsers()
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get users"})
 		return
 	}
-	c.JSON(http.StatusOK, users)
+
+	serializer := serializers.UsersSerializer{C: c, Users: users}
+
+	c.JSON(http.StatusOK, serializer.Response())
 }
