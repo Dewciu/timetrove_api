@@ -19,7 +19,11 @@ type UserSerializer struct {
 }
 
 func (s *UserSerializer) Response() UserResponse {
-	addressSerializer := addresses.AddressSerializer{s.C, s.Address}
+	addressSerializer := addresses.AddressSerializer{
+		C:            s.C,
+		AddressModel: s.Address,
+	}
+
 	response := UserResponse{
 		ID:       s.ID,
 		Username: s.Username,

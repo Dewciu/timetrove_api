@@ -1,7 +1,10 @@
 package users
 
 import (
+	"fmt"
+
 	"github.com/dewciu/timetrove_api/pkg/common"
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
 func GetAllUsersQuery() ([]UserModel, error) {
@@ -9,7 +12,19 @@ func GetAllUsersQuery() ([]UserModel, error) {
 	err := common.DB.Find(&users).Error
 	return users, err
 }
+func CreateUserQuery(user UserModel) error {
+	r := common.DB.Create(&user)
+	if r.Error == nil {
+		return nil
+	}
 
-func CreateUser(user UserModel) error {
-	return common.DB.Create(&user).Error
+	err := r.Error.(*pgconn.PgError)
+
+	if err.Code == "23505" {
+		fmt.Println(err.Detail)
+		column := common.GetColumnFromUniqueErrorDetails(err.Detail)
+		return &common.AlreadyExistsError{Column: column}
+	}
+
+	return r.Error
 }

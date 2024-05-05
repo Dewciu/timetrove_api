@@ -17,7 +17,9 @@ type BaseModel struct {
 func (b *BaseModel) BeforeCreate(tx *gorm.DB) error {
 	b.CreatedAt = time.Now()
 	b.UpdatedAt = time.Now()
-	b.ID = uuid.New()
+	if b.ID == uuid.Nil {
+		b.ID = uuid.New()
+	}
 	return nil
 }
 

@@ -60,6 +60,17 @@ const docTemplate = `{
                     "user"
                 ],
                 "summary": "Create User",
+                "parameters": [
+                    {
+                        "description": "User Object",
+                        "name": "User",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pkg_users.UserModelValidator"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Returns Created User",
@@ -100,6 +111,37 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "pkg_users.UserModelValidator": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "type": "object",
+                    "required": [
+                        "email",
+                        "password",
+                        "username"
+                    ],
+                    "properties": {
+                        "address_id": {
+                            "type": "string"
+                        },
+                        "email": {
+                            "type": "string"
+                        },
+                        "password": {
+                            "type": "string",
+                            "maxLength": 255,
+                            "minLength": 8
+                        },
+                        "username": {
+                            "type": "string",
+                            "maxLength": 255,
+                            "minLength": 4
+                        }
+                    }
                 }
             }
         }

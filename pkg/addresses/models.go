@@ -8,3 +8,7 @@ type AddressModel struct {
 	City   string `json:"city"`
 	State  string `json:"state"`
 }
+
+func (s *AddressModel) TableName() string {
+	return "addresses"
+}
