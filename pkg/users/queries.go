@@ -2,7 +2,9 @@ package users
 
 import (
 	"fmt"
+	"reflect"
 
+	"github.com/dewciu/timetrove_api/pkg/addresses"
 	"github.com/dewciu/timetrove_api/pkg/common"
 	"github.com/jackc/pgx/v5/pgconn"
 )
@@ -14,17 +16,26 @@ func GetAllUsersQuery() ([]UserModel, error) {
 }
 func CreateUserQuery(user UserModel) error {
 	r := common.DB.Create(&user)
-	if r.Error == nil {
-		return nil
+
+	fmt.Println(user)
+
+	if r.Error != nil {
+		err := r.Error.(*pgconn.PgError)
+
+		if err.Code == "23505" {
+			fmt.Println(err.Detail)
+			column := common.GetColumnFromUniqueErrorDetails(err.Detail)
+			return &common.AlreadyExistsError{Column: column}
+		}
+
+		return err
 	}
 
-	err := r.Error.(*pgconn.PgError)
-
-	if err.Code == "23505" {
-		fmt.Println(err.Detail)
-		column := common.GetColumnFromUniqueErrorDetails(err.Detail)
-		return &common.AlreadyExistsError{Column: column}
+	if !reflect.ValueOf(user.Address).IsZero() {
+		if err := addresses.CreateAddressQuery(user.Address); err != nil {
+			return err
+		}
 	}
 
-	return r.Error
+	return nil
 }

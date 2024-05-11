@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"reflect"
 
 	_ "github.com/dewciu/timetrove_api/docs"
 	"github.com/dewciu/timetrove_api/pkg/common"
@@ -47,6 +48,7 @@ func GetAllUsersController(c *gin.Context) {
 func CreateUserController(c *gin.Context) {
 	validator := UserModelValidator{}
 	if err := validator.Bind(c); err != nil {
+		fmt.Println(reflect.TypeOf(err))
 		c.JSON(http.StatusBadRequest, common.NewValidationError(err))
 		return
 	}

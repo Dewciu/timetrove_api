@@ -3,7 +3,7 @@ package common
 import (
 	"fmt"
 
-	"github.com/go-playground/validator"
+	"github.com/go-playground/validator/v10"
 )
 
 type ValidationError struct {
