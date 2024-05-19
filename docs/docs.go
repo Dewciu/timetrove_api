@@ -83,26 +83,9 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "Address": {
-            "type": "object",
-            "properties": {
-                "city": {
-                    "type": "string"
-                },
-                "state": {
-                    "type": "string"
-                },
-                "street": {
-                    "type": "string"
-                }
-            }
-        },
         "User": {
             "type": "object",
             "properties": {
-                "address": {
-                    "$ref": "#/definitions/Address"
-                },
                 "email": {
                     "type": "string"
                 },
@@ -125,9 +108,6 @@ const docTemplate = `{
                         "username"
                     ],
                     "properties": {
-                        "address_id": {
-                            "type": "string"
-                        },
                         "email": {
                             "type": "string"
                         },

@@ -1,18 +1,7 @@
 basePath: /api/v1
 definitions:
-  Address:
-    properties:
-      city:
-        type: string
-      state:
-        type: string
-      street:
-        type: string
-    type: object
   User:
     properties:
-      address:
-        $ref: '#/definitions/Address'
       email:
         type: string
       id:
@@ -24,8 +13,6 @@ definitions:
     properties:
       user:
         properties:
-          address_id:
-            type: string
           email:
             type: string
           password:

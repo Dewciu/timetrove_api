@@ -2,9 +2,7 @@ package users
 
 import (
 	"fmt"
-	"reflect"
 
-	"github.com/dewciu/timetrove_api/pkg/addresses"
 	"github.com/dewciu/timetrove_api/pkg/common"
 	"github.com/jackc/pgx/v5/pgconn"
 )
@@ -29,12 +27,6 @@ func CreateUserQuery(user UserModel) error {
 		}
 
 		return err
-	}
-
-	if !reflect.ValueOf(user.Address).IsZero() {
-		if err := addresses.CreateAddressQuery(user.Address); err != nil {
-			return err
-		}
 	}
 
 	return nil

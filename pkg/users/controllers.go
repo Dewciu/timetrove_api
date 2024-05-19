@@ -49,7 +49,8 @@ func CreateUserController(c *gin.Context) {
 	validator := UserModelValidator{}
 	if err := validator.Bind(c); err != nil {
 		fmt.Println(reflect.TypeOf(err))
-		c.JSON(http.StatusBadRequest, common.NewValidationError(err))
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
 
