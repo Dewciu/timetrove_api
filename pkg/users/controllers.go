@@ -121,5 +121,6 @@ func CreateUserController(c *gin.Context) {
 
 	serializer := UserSerializer{C: c, UserModel: validator.userModel}
 
-	c.JSON(http.StatusCreated, gin.H{"user": serializer.Response()})
+	c.JSON(http.StatusCreated, serializer.Response())
+}
 }
