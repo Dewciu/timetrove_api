@@ -50,8 +50,8 @@ func LoginController(c *gin.Context) {
 
 // GetAllUsersController godoc
 // @Summary Get Users
-// @Description Retrieves all users from the database
-// @Tags user
+// @Description Retrieves all users from the database, with optional filters
+// @Tags users
 // @Accept json
 // @Produce json
 // @Security ApiKeyAuth
@@ -91,7 +91,7 @@ func GetAllUsersController(c *gin.Context) {
 // CreateUserController godoc
 // @Summary Create User
 // @Description Creates single user in database
-// @Tags user
+// @Tags users
 // @Accept json
 // @Produce json
 // @Param User body UserModelValidator true "User Object"
