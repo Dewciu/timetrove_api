@@ -18,7 +18,7 @@ import (
 // LoginController godoc
 // @Summary Retrieve JWT API token
 // @Description Retrieve JWT API token, when given valid username and password
-// @Tags user
+// @Tags auth
 // @Accept json
 // @Produce json
 // @Param Credentials body LoginValidator true "Login Credentials"
