@@ -15,8 +15,6 @@ func GetAllUsersQuery() ([]UserModel, error) {
 func CreateUserQuery(user UserModel) error {
 	r := common.DB.Create(&user)
 
-	fmt.Println(user)
-
 	if r.Error != nil {
 		err := r.Error.(*pgconn.PgError)
 
