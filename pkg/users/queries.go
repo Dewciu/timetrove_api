@@ -20,7 +20,6 @@ func CreateUserQuery(user UserModel) error {
 		err := r.Error.(*pgconn.PgError)
 
 		if err.Code == "23505" {
-			fmt.Println(err.Detail)
 			column := common.GetColumnFromUniqueErrorDetails(err.Detail)
 			return &common.AlreadyExistsError{Column: column}
 		}
