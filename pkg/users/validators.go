@@ -7,11 +7,9 @@ import (
 )
 
 type UserModelValidator struct {
-	User struct {
-		Username string `form:"username" json:"username" binding:"required,alphanum,min=4,max=255"`
-		Email    string `form:"email" json:"email" binding:"required,email"`
-		Password string `form:"password" json:"password" binding:"required,min=8,max=255"`
-	} `json:"user"`
+	Username  string    `form:"username" json:"username" binding:"required,alphanum,min=4,max=255"`
+	Email     string    `form:"email" json:"email" binding:"required,email"`
+	Password  string    `form:"password" json:"password" binding:"required,min=8,max=255"`
 	userModel UserModel `json:"-"`
 } // @name UserModelValidator
 
@@ -22,9 +20,9 @@ func (s *UserModelValidator) Bind(c *gin.Context) error {
 	}
 
 	s.userModel.ID = uuid.New()
-	s.userModel.Username = s.User.Username
-	s.userModel.Email = s.User.Email
-	s.userModel.Password = s.User.Password
+	s.userModel.Username = s.Username
+	s.userModel.Email = s.Email
+	s.userModel.Password = s.Password
 
 	return nil
 }
