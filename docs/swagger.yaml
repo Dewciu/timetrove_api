@@ -9,6 +9,21 @@ definitions:
       username:
         type: string
     type: object
+  pkg_users.LoginValidator:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  pkg_users.TokenResponse:
+    properties:
+      token:
+        type: string
+    type: object
   pkg_users.UserModelValidator:
     properties:
       user:
@@ -56,6 +71,8 @@ paths:
             items:
               $ref: '#/definitions/User'
             type: array
+      security:
+      - ApiKeyAuth: []
       summary: Get Users
       tags:
       - user
@@ -80,11 +97,33 @@ paths:
       summary: Create User
       tags:
       - user
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Retrieve JWT API token, when given valid username and password
+      parameters:
+      - description: Login Credentials
+        in: body
+        name: Credentials
+        required: true
+        schema:
+          $ref: '#/definitions/pkg_users.LoginValidator'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Returns JWT token
+          schema:
+            $ref: '#/definitions/pkg_users.TokenResponse'
+      summary: Retrieve JWT API token
+      tags:
+      - user
 schemes:
 - http
 - https
 securityDefinitions:
-  JWT:
+  ApiKeyAuth:
     in: header
     name: Authorization
     type: apiKey

@@ -20,9 +20,11 @@ type Config struct {
 		Name     string `yaml:"name"`
 	}
 	Server struct {
-		Host string `yaml:"host"`
-		Port int    `yaml:"port"`
-		Mode string `yaml:"mode"`
+		Host              string `yaml:"host"`
+		Port              int    `yaml:"port"`
+		Mode              string `yaml:"mode"`
+		ApiSecret         string `yaml:"api_secret"`
+		TokenHourLifetime int    `yaml:"token_hour_lifetime"`
 	}
 }
 

@@ -41,3 +41,20 @@ func (s *UsersSerializer) Response() []UserResponse {
 
 	return response
 }
+
+type TokenResponse struct {
+	Token string `json:"token"`
+}
+
+type TokenSerializer struct {
+	C     *gin.Context
+	Token string
+} //@name Token
+
+func (s *TokenSerializer) Response() TokenResponse {
+	response := TokenResponse{
+		Token: s.Token,
+	}
+
+	return response
+}

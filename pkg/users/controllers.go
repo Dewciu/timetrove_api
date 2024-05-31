@@ -14,12 +14,46 @@ import (
 
 // @BasePath /api/v1
 
+// LoginController godoc
+// @Summary Retrieve JWT API token
+// @Description Retrieve JWT API token, when given valid username and password
+// @Tags user
+// @Accept json
+// @Produce json
+// @Param Credentials body LoginValidator true "Login Credentials"
+// @Success 200 {object} TokenResponse "Returns JWT token"
+// @Router /users/login [post]
+func LoginController(c *gin.Context) {
+	var validator LoginValidator
+
+	if err := c.ShouldBindJSON(&validator); err != nil {
+		c.JSON(http.StatusBadRequest, common.NewError("login", err))
+		return
+	}
+
+	u := UserModel{Username: validator.Username, Password: validator.Password}
+
+	token, err := u.LoginCheck()
+
+	serializer := TokenSerializer{C: c, Token: token}
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, common.NewError("login", errors.New("invalid credentials")))
+		return
+	}
+
+	c.JSON(http.StatusOK, serializer.Response())
+}
+
+// @BasePath /api/v1
+
 // GetAllUsersController godoc
 // @Summary Get Users
 // @Description Retrieves all users from the database
 // @Tags user
 // @Accept json
 // @Produce json
+// @Security ApiKeyAuth
 // @Success 200 {array} UserResponse "Returns list of users"
 // @Router /users [get]
 func GetAllUsersController(c *gin.Context) {

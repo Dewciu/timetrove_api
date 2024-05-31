@@ -1,6 +1,9 @@
 package addresses
 
-import "github.com/dewciu/timetrove_api/pkg/common"
+import (
+	"github.com/dewciu/timetrove_api/pkg/common"
+	"github.com/dewciu/timetrove_api/pkg/users"
+)
 
 type AddressModel struct {
 	common.BaseModel
@@ -8,6 +11,8 @@ type AddressModel struct {
 	HouseNumber string `json:"house_number"`
 	City        string `json:"city"`
 	State       string `json:"state"`
+	UserID      string `json:"user_id"`
+	User        users.UserModel
 }
 
 func (s *AddressModel) TableName() string {

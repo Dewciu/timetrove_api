@@ -24,7 +24,7 @@ import (
 // @contact.name Kacper Król
 // @contact.email kacperkrol99@icloud.com
 
-// @securityDefinitions.apiKey JWT
+// @securityDefinitions.apiKey ApiKeyAuth
 // @in header
 // @name Authorization
 

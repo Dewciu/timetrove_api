@@ -28,3 +28,17 @@ func (s *UserModelValidator) Bind(c *gin.Context) error {
 
 	return nil
 }
+
+type LoginValidator struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+func (s *LoginValidator) Bind(c *gin.Context) error {
+	err := common.Bind(c, s)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
