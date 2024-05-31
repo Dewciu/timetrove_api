@@ -7,6 +7,7 @@ import (
 
 	_ "github.com/dewciu/timetrove_api/docs"
 	"github.com/dewciu/timetrove_api/pkg/common"
+	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
 )
@@ -148,4 +149,27 @@ func GetUserByIDController(c *gin.Context) {
 	serializer := UserSerializer{C: c, UserModel: user}
 	c.JSON(http.StatusOK, serializer.Response())
 }
+
+// DeleteUserByIDController godoc
+// @Summary Delete User by ID
+// @Description Deletes a user from the database by ID
+// @Tags users
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Param id path string true "User ID"
+// @Success 204 "No Content"
+// @Router /users/{id} [delete]
+func DeleteUserByIDController(c *gin.Context) {
+	id := c.Param("id")
+	err := DeleteUserByIdQuery(id)
+	if err != nil {
+		if errors.Is(gorm.ErrRecordNotFound, err) {
+			c.JSON(http.StatusNotFound, common.NewError("user", errors.New("user not found")))
+			return
+		}
+		c.JSON(http.StatusInternalServerError, common.NewError("user", err))
+		return
+	}
+	c.Status(http.StatusNoContent)
 }

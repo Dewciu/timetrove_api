@@ -1,8 +1,6 @@
 package users
 
 import (
-	"fmt"
-
 	"github.com/dewciu/timetrove_api/pkg/common"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -58,4 +56,9 @@ func GetUserByIdQuery(id string) (UserModel, error) {
 		return UserModel{}, err
 	}
 	return user, nil
+}
+
+func DeleteUserByIdQuery(id string) error {
+	err := common.DB.Where("id = ?", id).Delete(&UserModel{}).Error
+	return err
 }

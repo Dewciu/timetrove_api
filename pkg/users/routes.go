@@ -13,5 +13,6 @@ func AddUsersRoutes(rg *gin.RouterGroup) {
 		users.GET("/", middleware.AuthMiddleware(), GetAllUsersController)
 		users.POST("/", middleware.AuthMiddleware(), CreateUserController)
 		users.GET("/:id", middleware.AuthMiddleware(), GetUserByIDController)
+		users.DELETE("/:id", middleware.AuthMiddleware(), DeleteUserByIDController)
 	}
 }
