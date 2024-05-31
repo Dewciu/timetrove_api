@@ -13,7 +13,7 @@ type UserModelValidator struct {
 		Password string `form:"password" json:"password" binding:"required,min=8,max=255"`
 	} `json:"user"`
 	userModel UserModel `json:"-"`
-}
+} // @name UserModelValidator
 
 func (s *UserModelValidator) Bind(c *gin.Context) error {
 	err := common.Bind(c, s)
@@ -32,7 +32,7 @@ func (s *UserModelValidator) Bind(c *gin.Context) error {
 type LoginValidator struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
-}
+} // @name LoginValidator
 
 func (s *LoginValidator) Bind(c *gin.Context) error {
 	err := common.Bind(c, s)

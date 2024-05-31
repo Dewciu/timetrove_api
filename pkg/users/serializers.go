@@ -9,7 +9,7 @@ type UserResponse struct {
 	ID       uuid.UUID `json:"id"`
 	Username string    `json:"username"`
 	Email    string    `json:"email"`
-} //@name User
+} //@name UserResponse
 
 type UserSerializer struct {
 	C *gin.Context
@@ -44,12 +44,12 @@ func (s *UsersSerializer) Response() []UserResponse {
 
 type TokenResponse struct {
 	Token string `json:"token"`
-}
+} //@name TokenResponse
 
 type TokenSerializer struct {
 	C     *gin.Context
 	Token string
-} //@name Token
+}
 
 func (s *TokenSerializer) Response() TokenResponse {
 	response := TokenResponse{
