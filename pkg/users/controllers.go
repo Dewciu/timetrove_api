@@ -123,4 +123,29 @@ func CreateUserController(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, serializer.Response())
 }
+
+// GetUserByIDController godoc
+// @Summary Get User by ID
+// @Description Retrieves a user from the database by ID
+// @Tags users
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Param id path string true "User ID"
+// @Success 200 {object} UserResponse "Returns the user"
+// @Router /users/{id} [get]
+func GetUserByIDController(c *gin.Context) {
+	id := c.Param("id")
+	user, err := GetUserByIdQuery(id)
+	if err != nil {
+		if errors.Is(gorm.ErrRecordNotFound, err) {
+			c.JSON(http.StatusNotFound, common.NewError("user", errors.New("user not found")))
+			return
+		}
+		c.JSON(http.StatusInternalServerError, common.NewError("user", err))
+		return
+	}
+	serializer := UserSerializer{C: c, UserModel: user}
+	c.JSON(http.StatusOK, serializer.Response())
+}
 }

@@ -50,3 +50,12 @@ func GetUsersByFilterQuery(c *gin.Context) ([]UserModel, error) {
 
 	return users, nil
 }
+
+func GetUserByIdQuery(id string) (UserModel, error) {
+	var user UserModel
+	err := common.DB.Where("id = ?", id).First(&user).Error
+	if err != nil {
+		return UserModel{}, err
+	}
+	return user, nil
+}
