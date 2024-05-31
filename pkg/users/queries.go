@@ -31,18 +31,18 @@ func CreateUserQuery(user UserModel) error {
 	return nil
 }
 
-func GetUsersFromContextQuery(c *gin.Context) ([]UserModel, error) {
+func GetUsersByFilterQuery(c *gin.Context) ([]UserModel, error) {
 	var users []UserModel
 	query := common.DB
 
-	if name := c.Query("name"); name != "" {
-		query = query.Where("name = ?", name)
+	if username := c.Query("username"); username != "" {
+		query = query.Where("username = ?", username)
 	}
 	if email := c.Query("email"); email != "" {
 		query = query.Where("email = ?", email)
 	}
-	if age := c.Query("age"); age != "" {
-		query = query.Where("age = ?", age)
+	if id := c.Query("id"); id != "" {
+		query = query.Where("id = ?", id)
 	}
 
 	if err := query.Find(&users).Error; err != nil {

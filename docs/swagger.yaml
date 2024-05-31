@@ -62,6 +62,19 @@ paths:
       consumes:
       - application/json
       description: Retrieves all users from the database
+      parameters:
+      - description: User's E-mail
+        in: query
+        name: email
+        type: string
+      - description: User's username
+        in: query
+        name: username
+        type: string
+      - description: User's ID
+        in: query
+        name: id
+        type: string
       produces:
       - application/json
       responses:

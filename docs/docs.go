@@ -41,6 +41,26 @@ const docTemplate = `{
                     "user"
                 ],
                 "summary": "Get Users",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User's E-mail",
+                        "name": "email",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "User's username",
+                        "name": "username",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "User's ID",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Returns list of users",

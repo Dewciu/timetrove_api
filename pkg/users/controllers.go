@@ -55,12 +55,29 @@ func LoginController(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Security ApiKeyAuth
+// @Param email query string false "User's E-mail"
+// @Param username query string false "User's username"
+// @Param id query string false "User's ID"
 // @Success 200 {array} UserResponse "Returns list of users"
 // @Router /users [get]
 func GetAllUsersController(c *gin.Context) {
-	users, err := GetAllUsersQuery()
+	var users []UserModel
+	var err error
+
+	if len(c.Request.URL.Query()) == 0 {
+		fmt.Println(c.Request.URL.Query())
+		users, err = GetAllUsersQuery()
+	} else {
+		users, err = GetUsersByFilterQuery(c)
+	}
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get users"})
+		return
+	}
+
+	if len(users) == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "No users found"})
 		return
 	}
 

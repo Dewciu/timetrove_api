@@ -7,6 +7,8 @@ import (
 	"gorm.io/gorm"
 )
 
+//TODO Add permissions to endpoints for the user
+
 type UserModel struct {
 	common.BaseModel
 	Username string `gorm:"unique;not null; type:varchar(255)" json:"username"`
