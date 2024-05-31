@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/dewciu/timetrove_api/pkg/common"
+	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
@@ -28,4 +29,25 @@ func CreateUserQuery(user UserModel) error {
 	}
 
 	return nil
+}
+
+func GetUsersFromContextQuery(c *gin.Context) ([]UserModel, error) {
+	var users []UserModel
+	query := common.DB
+
+	if name := c.Query("name"); name != "" {
+		query = query.Where("name = ?", name)
+	}
+	if email := c.Query("email"); email != "" {
+		query = query.Where("email = ?", email)
+	}
+	if age := c.Query("age"); age != "" {
+		query = query.Where("age = ?", age)
+	}
+
+	if err := query.Find(&users).Error; err != nil {
+		return []UserModel{}, err
+	}
+
+	return users, nil
 }
