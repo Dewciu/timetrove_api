@@ -1,15 +1,6 @@
 basePath: /api/v1
 definitions:
-  User:
-    properties:
-      email:
-        type: string
-      id:
-        type: string
-      username:
-        type: string
-    type: object
-  pkg_users.LoginValidator:
+  LoginValidator:
     properties:
       password:
         type: string
@@ -19,30 +10,36 @@ definitions:
     - password
     - username
     type: object
-  pkg_users.TokenResponse:
+  TokenResponse:
     properties:
       token:
         type: string
     type: object
-  pkg_users.UserModelValidator:
+  UserModelValidator:
     properties:
-      user:
-        properties:
-          email:
-            type: string
-          password:
-            maxLength: 255
-            minLength: 8
-            type: string
-          username:
-            maxLength: 255
-            minLength: 4
-            type: string
-        required:
-        - email
-        - password
-        - username
-        type: object
+      email:
+        type: string
+      password:
+        maxLength: 255
+        minLength: 8
+        type: string
+      username:
+        maxLength: 255
+        minLength: 4
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  UserResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      username:
+        type: string
     type: object
 host: localhost:8080
 info:
@@ -61,7 +58,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Retrieves all users from the database
+      description: Retrieves all users from the database, with optional filters
       parameters:
       - description: User's E-mail
         in: query
@@ -82,13 +79,13 @@ paths:
           description: Returns list of users
           schema:
             items:
-              $ref: '#/definitions/User'
+              $ref: '#/definitions/UserResponse'
             type: array
       security:
       - ApiKeyAuth: []
       summary: Get Users
       tags:
-      - user
+      - users
     post:
       consumes:
       - application/json
@@ -99,19 +96,62 @@ paths:
         name: User
         required: true
         schema:
-          $ref: '#/definitions/pkg_users.UserModelValidator'
+          $ref: '#/definitions/UserModelValidator'
       produces:
       - application/json
       responses:
         "200":
           description: Returns Created User
           schema:
-            $ref: '#/definitions/User'
+            $ref: '#/definitions/UserResponse'
       security:
       - ApiKeyAuth: []
       summary: Create User
       tags:
-      - user
+      - users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a user from the database by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+      security:
+      - ApiKeyAuth: []
+      summary: Delete User by ID
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a user from the database by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Returns the user
+          schema:
+            $ref: '#/definitions/UserResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get User by ID
+      tags:
+      - users
   /users/login:
     post:
       consumes:
@@ -123,17 +163,17 @@ paths:
         name: Credentials
         required: true
         schema:
-          $ref: '#/definitions/pkg_users.LoginValidator'
+          $ref: '#/definitions/LoginValidator'
       produces:
       - application/json
       responses:
         "200":
           description: Returns JWT token
           schema:
-            $ref: '#/definitions/pkg_users.TokenResponse'
+            $ref: '#/definitions/TokenResponse'
       summary: Retrieve JWT API token
       tags:
-      - user
+      - auth
 schemes:
 - http
 - https

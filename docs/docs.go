@@ -30,7 +30,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Retrieves all users from the database",
+                "description": "Retrieves all users from the database, with optional filters",
                 "consumes": [
                     "application/json"
                 ],
@@ -38,7 +38,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "users"
                 ],
                 "summary": "Get Users",
                 "parameters": [
@@ -67,7 +67,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/User"
+                                "$ref": "#/definitions/UserResponse"
                             }
                         }
                     }
@@ -87,7 +87,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "users"
                 ],
                 "summary": "Create User",
                 "parameters": [
@@ -97,7 +97,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/pkg_users.UserModelValidator"
+                            "$ref": "#/definitions/UserModelValidator"
                         }
                     }
                 ],
@@ -105,7 +105,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Returns Created User",
                         "schema": {
-                            "$ref": "#/definitions/User"
+                            "$ref": "#/definitions/UserResponse"
                         }
                     }
                 }
@@ -121,7 +121,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "auth"
                 ],
                 "summary": "Retrieve JWT API token",
                 "parameters": [
@@ -131,7 +131,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/pkg_users.LoginValidator"
+                            "$ref": "#/definitions/LoginValidator"
                         }
                     }
                 ],
@@ -139,29 +139,84 @@ const docTemplate = `{
                     "200": {
                         "description": "Returns JWT token",
                         "schema": {
-                            "$ref": "#/definitions/pkg_users.TokenResponse"
+                            "$ref": "#/definitions/TokenResponse"
                         }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Retrieves a user from the database by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get User by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the user",
+                        "schema": {
+                            "$ref": "#/definitions/UserResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Deletes a user from the database by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Delete User by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
                     }
                 }
             }
         }
     },
     "definitions": {
-        "User": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "pkg_users.LoginValidator": {
+        "LoginValidator": {
             "type": "object",
             "required": [
                 "password",
@@ -176,7 +231,7 @@ const docTemplate = `{
                 }
             }
         },
-        "pkg_users.TokenResponse": {
+        "TokenResponse": {
             "type": "object",
             "properties": {
                 "token": {
@@ -184,31 +239,40 @@ const docTemplate = `{
                 }
             }
         },
-        "pkg_users.UserModelValidator": {
+        "UserModelValidator": {
+            "type": "object",
+            "required": [
+                "email",
+                "password",
+                "username"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 8
+                },
+                "username": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 4
+                }
+            }
+        },
+        "UserResponse": {
             "type": "object",
             "properties": {
-                "user": {
-                    "type": "object",
-                    "required": [
-                        "email",
-                        "password",
-                        "username"
-                    ],
-                    "properties": {
-                        "email": {
-                            "type": "string"
-                        },
-                        "password": {
-                            "type": "string",
-                            "maxLength": 255,
-                            "minLength": 8
-                        },
-                        "username": {
-                            "type": "string",
-                            "maxLength": 255,
-                            "minLength": 4
-                        }
-                    }
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
                 }
             }
         }
