@@ -94,6 +94,8 @@ paths:
           description: Returns Created User
           schema:
             $ref: '#/definitions/User'
+      security:
+      - ApiKeyAuth: []
       summary: Create User
       tags:
       - user

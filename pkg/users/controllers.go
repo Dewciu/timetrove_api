@@ -4,13 +4,14 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"reflect"
 
 	_ "github.com/dewciu/timetrove_api/docs"
 	"github.com/dewciu/timetrove_api/pkg/common"
 
 	"github.com/gin-gonic/gin"
 )
+
+//TODO: Improve error handling -> more descriptive error messages
 
 // @BasePath /api/v1
 
@@ -77,14 +78,13 @@ func GetAllUsersController(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param User body UserModelValidator true "User Object"
+// @Security ApiKeyAuth
 // @Success 200 {object} UserResponse "Returns Created User"
 // @Router /users [post]
 func CreateUserController(c *gin.Context) {
 	validator := UserModelValidator{}
 	if err := validator.Bind(c); err != nil {
-		fmt.Println(reflect.TypeOf(err))
-		fmt.Println(err)
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, common.NewError("user", err))
 		return
 	}
 

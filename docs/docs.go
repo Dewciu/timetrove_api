@@ -54,6 +54,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Creates single user in database",
                 "consumes": [
                     "application/json"
