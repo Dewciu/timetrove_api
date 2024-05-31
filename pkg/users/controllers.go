@@ -72,12 +72,12 @@ func GetAllUsersController(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get users"})
+		c.JSON(http.StatusInternalServerError, common.NewError("server", err))
 		return
 	}
 
 	if len(users) == 0 {
-		c.JSON(http.StatusNotFound, gin.H{"error": "No users found"})
+		c.JSON(http.StatusNotFound, common.NewError("users", err))
 		return
 	}
 
