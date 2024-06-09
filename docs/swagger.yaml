@@ -15,7 +15,7 @@ definitions:
       token:
         type: string
     type: object
-  UserModelValidator:
+  UserCreateModelValidator:
     properties:
       email:
         type: string
@@ -41,6 +41,19 @@ definitions:
       username:
         type: string
     type: object
+  UserUpdateModelValidator:
+    properties:
+      email:
+        type: string
+      password:
+        maxLength: 255
+        minLength: 8
+        type: string
+      username:
+        maxLength: 255
+        minLength: 4
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -54,6 +67,28 @@ info:
   title: TimeTrove API
   version: "1.0"
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Retrieve JWT API token, when given valid username and password
+      parameters:
+      - description: Login Credentials
+        in: body
+        name: Credentials
+        required: true
+        schema:
+          $ref: '#/definitions/LoginValidator'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Returns JWT token
+          schema:
+            $ref: '#/definitions/TokenResponse'
+      summary: Retrieve JWT API token
+      tags:
+      - auth
   /users:
     get:
       consumes:
@@ -96,7 +131,7 @@ paths:
         name: User
         required: true
         schema:
-          $ref: '#/definitions/UserModelValidator'
+          $ref: '#/definitions/UserCreateModelValidator'
       produces:
       - application/json
       responses:
@@ -152,28 +187,34 @@ paths:
       summary: Get User by ID
       tags:
       - users
-  /users/login:
-    post:
+    put:
       consumes:
       - application/json
-      description: Retrieve JWT API token, when given valid username and password
+      description: Updates a user in the database by ID
       parameters:
-      - description: Login Credentials
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User Object fields to update
         in: body
-        name: Credentials
+        name: User
         required: true
         schema:
-          $ref: '#/definitions/LoginValidator'
+          $ref: '#/definitions/UserUpdateModelValidator'
       produces:
       - application/json
       responses:
         "200":
-          description: Returns JWT token
+          description: Returns the updated user
           schema:
-            $ref: '#/definitions/TokenResponse'
-      summary: Retrieve JWT API token
+            $ref: '#/definitions/UserResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update User by ID
       tags:
-      - auth
+      - users
 schemes:
 - http
 - https

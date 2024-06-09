@@ -62,3 +62,21 @@ func DeleteUserByIdQuery(id string) error {
 	err := common.DB.Where("id = ?", id).Delete(&UserModel{}).Error
 	return err
 }
+
+func UpdateUserByIdQuery(id string, userToUpdate UserUpdateModelValidator) (UserModel, error) {
+	var user UserModel
+
+	if userToUpdate.Password != "" {
+		hash, err := generatePassword(userToUpdate.Password)
+		if err != nil {
+			return UserModel{}, err
+		}
+		userToUpdate.Password = hash
+	}
+
+	if err := common.DB.Model(&user).Where("id = ?", id).Updates(userToUpdate).First(&user).Error; err != nil {
+		return UserModel{}, err
+	}
+
+	return user, nil
+}

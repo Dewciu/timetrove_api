@@ -23,6 +23,40 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth/login": {
+            "post": {
+                "description": "Retrieve JWT API token, when given valid username and password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Retrieve JWT API token",
+                "parameters": [
+                    {
+                        "description": "Login Credentials",
+                        "name": "Credentials",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/LoginValidator"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns JWT token",
+                        "schema": {
+                            "$ref": "#/definitions/TokenResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "security": [
@@ -97,7 +131,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/UserModelValidator"
+                            "$ref": "#/definitions/UserCreateModelValidator"
                         }
                     }
                 ],
@@ -106,40 +140,6 @@ const docTemplate = `{
                         "description": "Returns Created User",
                         "schema": {
                             "$ref": "#/definitions/UserResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/login": {
-            "post": {
-                "description": "Retrieve JWT API token, when given valid username and password",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Retrieve JWT API token",
-                "parameters": [
-                    {
-                        "description": "Login Credentials",
-                        "name": "Credentials",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/LoginValidator"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Returns JWT token",
-                        "schema": {
-                            "$ref": "#/definitions/TokenResponse"
                         }
                     }
                 }
@@ -175,6 +175,50 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "Returns the user",
+                        "schema": {
+                            "$ref": "#/definitions/UserResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Updates a user in the database by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update User by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "User Object fields to update",
+                        "name": "User",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserUpdateModelValidator"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the updated user",
                         "schema": {
                             "$ref": "#/definitions/UserResponse"
                         }
@@ -239,7 +283,7 @@ const docTemplate = `{
                 }
             }
         },
-        "UserModelValidator": {
+        "UserCreateModelValidator": {
             "type": "object",
             "required": [
                 "email",
@@ -273,6 +317,24 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "UserUpdateModelValidator": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 8
+                },
+                "username": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 4
                 }
             }
         }

@@ -95,14 +95,14 @@ func GetAllUsersController(c *gin.Context) {
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param User body UserModelValidator true "User Object"
+// @Param User body UserCreateModelValidator true "User Object"
 // @Security ApiKeyAuth
 // @Success 200 {object} UserResponse "Returns Created User"
 // @Router /users [post]
 func CreateUserController(c *gin.Context) {
-	validator := UserModelValidator{}
+	validator := UserCreateModelValidator{}
 	if err := validator.Bind(c); err != nil {
-		c.JSON(http.StatusBadRequest, common.NewError("user", err))
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 		return
 	}
 
@@ -172,4 +172,36 @@ func DeleteUserByIDController(c *gin.Context) {
 		return
 	}
 	c.Status(http.StatusNoContent)
+}
+
+// UpdateUserController godoc
+// @Summary Update User by ID
+// @Description Updates a user in the database by ID
+// @Tags users
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Param id path string true "User ID"
+// @Param User body UserUpdateModelValidator true "User Object fields to update"
+// @Success 200 {object} UserResponse "Returns the updated user"
+// @Router /users/{id} [put]
+func UpdateUserController(c *gin.Context) {
+	//TODO Finish update user controller
+	id := c.Param("id")
+	validator := UserUpdateModelValidator{}
+	if err := validator.Bind(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+	user, err := UpdateUserByIdQuery(id, validator)
+	if err != nil {
+		if errors.Is(gorm.ErrRecordNotFound, err) {
+			c.JSON(http.StatusNotFound, common.NewError("user", errors.New("user not found")))
+			return
+		}
+		c.JSON(http.StatusInternalServerError, common.NewError("user", err))
+		return
+	}
+	serializer := UserSerializer{C: c, UserModel: user}
+	c.JSON(http.StatusOK, serializer.Response())
 }
