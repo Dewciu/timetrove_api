@@ -76,6 +76,7 @@ func SetupRouter() *gin.Engine {
 	v1 := r.Group("/api/v1")
 	addSwaggerRoutes(v1)
 	users.AddUsersRoutes(v1)
+	users.AddAuthRoutes(v1)
 	return r
 }
 

@@ -24,7 +24,7 @@ import (
 // @Produce json
 // @Param Credentials body LoginValidator true "Login Credentials"
 // @Success 200 {object} TokenResponse "Returns JWT token"
-// @Router /users/login [post]
+// @Router /auth/login [post]
 func LoginController(c *gin.Context) {
 	var validator LoginValidator
 
