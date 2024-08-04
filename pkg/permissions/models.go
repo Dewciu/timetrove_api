@@ -6,9 +6,9 @@ import (
 
 type PermissionModel struct {
 	common.BaseModel
-	Endpoint string `json:"endpoint"`
-	Method   string `json:"method"`
-} //@name Permission
+	Endpoint string `json:"endpoint" gorm:"not null;index:,unique,composite:idx_endpoint_method"`
+	Method   string `json:"method" gorm:"not null;index:,unique,composite:idx_endpoint_method"`
+}
 
 func (u *PermissionModel) TableName() string {
 	return "permissions"

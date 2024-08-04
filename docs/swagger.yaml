@@ -215,6 +215,29 @@ paths:
       summary: Update User by ID
       tags:
       - users
+  /users/{id}/permissions:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves permission list for specific user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Returns user's permissions
+          schema:
+            $ref: '#/definitions/UserResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Retrieve Permissions for the user by ID
+      tags:
+      - users
 schemes:
 - http
 - https

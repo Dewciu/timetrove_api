@@ -2,6 +2,7 @@ package users
 
 import (
 	"github.com/dewciu/timetrove_api/pkg/common"
+	perm "github.com/dewciu/timetrove_api/pkg/permissions"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgconn"
 )
@@ -79,4 +80,22 @@ func UpdateUserByIdQuery(id string, userToUpdate UserUpdateModelValidator) (User
 	}
 
 	return user, nil
+}
+
+func GetPermissionsByUserIDQuery(id string) ([]perm.PermissionModel, error) {
+
+	var user UserModel
+	var permissions []perm.PermissionModel
+
+	err := common.DB.Where("id = ?", id).Find(&user).Error
+	if err != nil {
+		return []perm.PermissionModel{}, err
+	}
+
+	err = common.DB.Model(&user).Association("Permissions").Find(&permissions)
+	if err != nil {
+		return []perm.PermissionModel{}, err
+	}
+
+	return permissions, nil
 }

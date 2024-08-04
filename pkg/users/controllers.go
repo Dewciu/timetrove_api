@@ -205,3 +205,34 @@ func UpdateUserController(c *gin.Context) {
 	serializer := UserSerializer{C: c, UserModel: user}
 	c.JSON(http.StatusOK, serializer.Response())
 }
+
+// TODO Make this controlleer better with serializer and figure out what to do with permissions directory to avoid import cycle
+
+// GetUserWithPermissionsController godoc
+// @Summary Retrieve Permissions for the user by ID
+// @Description Retrieves permission list for specific user by ID
+// @Tags users
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Param id path string true "User ID"
+// @Success 200 {object} UserResponse "Returns user's permissions"
+// @Router /users/{id}/permissions [get]
+func GetUserWithPermissionsController(c *gin.Context) {
+	id := c.Param("id")
+
+	user, err := GetUserByIdQuery(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, common.NewError("permissions", errors.New("user not found")))
+		return
+	}
+
+	permissions, err := GetPermissionsByUserIDQuery(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, common.NewError("permissions", errors.New("permissions not found")))
+		return
+	}
+
+	serializer := PermissionsForUserSerializer{C: c, UserModel: user, Permissions: permissions}
+	c.JSON(http.StatusOK, serializer.Response())
+}

@@ -6,9 +6,10 @@ import (
 	"github.com/dewciu/timetrove_api/pkg/addresses"
 	"github.com/dewciu/timetrove_api/pkg/common"
 	"github.com/dewciu/timetrove_api/pkg/config"
-	"github.com/dewciu/timetrove_api/pkg/permissions"
+	perm "github.com/dewciu/timetrove_api/pkg/permissions"
 	"github.com/dewciu/timetrove_api/pkg/users"
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/sirupsen/logrus"
 
 	files "github.com/swaggo/files"
@@ -45,14 +46,19 @@ func main() {
 	router := SetupRouter()
 
 	if err = common.Connect(conf); err != nil {
-		msg := fmt.Sprintf("Failed to connect to common: %v", err)
+		msg := fmt.Sprintf("Failed to connect to DB: %v", err)
 		panic(msg)
 	}
 
 	defer common.Disconnect()
 
 	if err = Migrate(); err != nil {
-		msg := fmt.Sprintf("Failed to migrate common: %v", err)
+		msg := fmt.Sprintf("Failed to migrate DB: %v", err)
+		panic(msg)
+	}
+
+	if err = Seed(); err != nil {
+		msg := fmt.Sprintf("Failed to seed DB: %v", err)
 		panic(msg)
 	}
 
@@ -64,8 +70,8 @@ func Migrate() error {
 	if err := common.DB.AutoMigrate(
 		&users.UserModel{},
 		&addresses.AddressModel{},
-		&permissions.PermissionModel{},
-		&permissions.PermissionGroupModel{},
+		&perm.PermissionModel{},
+		&perm.PermissionGroupModel{},
 	); err != nil {
 		return err
 	}
@@ -81,6 +87,43 @@ func SetupRouter() *gin.Engine {
 	users.AddUsersRoutes(v1)
 	users.AddAuthRoutes(v1)
 	return r
+}
+
+// TODO: Improve seeding
+func Seed() error {
+
+	adminName := "admin"
+
+	if common.DB.First(&users.UserModel{}, "username = ?", adminName).RowsAffected <= 0 {
+		err := users.CreateUserQuery(users.UserModel{
+			Username: adminName,
+			Password: "$2a$10$Zyy2bxGCIyqj51cdQDs9zuhDaUux9bTFgUnqsKbJuLtaGUCDGWgG2",
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	var permissions [][]perm.PermissionModel = [][]perm.PermissionModel{
+		users.GetUserPermissions(),
+		users.GetAuthPermissions(),
+	}
+
+	var batchPermissions []perm.PermissionModel
+
+	for _, permission := range permissions {
+		batchPermissions = append(batchPermissions, permission...)
+	}
+
+	if err := common.DB.Create(&batchPermissions).Error; err != nil {
+		err := err.(*pgconn.PgError)
+
+		if err.Code != "23505" {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func addSwaggerRoutes(rg *gin.RouterGroup) {
