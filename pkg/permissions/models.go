@@ -17,7 +17,7 @@ func (u *PermissionModel) TableName() string {
 type PermissionGroupModel struct {
 	common.BaseModel
 	Name        string             `json:"name"`
-	Permissions []*PermissionModel `gorm:"many2many:permission_groups;"`
+	Permissions []*PermissionModel `gorm:"many2many:permission_group_permissions;"`
 } //@name PermissionGroup
 
 func (u *PermissionGroupModel) TableName() string {
