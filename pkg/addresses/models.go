@@ -5,6 +5,7 @@ import (
 	"github.com/dewciu/timetrove_api/pkg/users"
 )
 
+// TODO: Relate AddressModel to UserModel etc...
 type AddressModel struct {
 	common.BaseModel
 	Street      string `json:"street"`
