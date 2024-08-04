@@ -6,6 +6,7 @@ import (
 	"github.com/dewciu/timetrove_api/pkg/addresses"
 	"github.com/dewciu/timetrove_api/pkg/common"
 	"github.com/dewciu/timetrove_api/pkg/config"
+	"github.com/dewciu/timetrove_api/pkg/permissions"
 	"github.com/dewciu/timetrove_api/pkg/users"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -63,6 +64,8 @@ func Migrate() error {
 	if err := common.DB.AutoMigrate(
 		&users.UserModel{},
 		&addresses.AddressModel{},
+		&permissions.PermissionModel{},
+		&permissions.PermissionGroupModel{},
 	); err != nil {
 		return err
 	}

@@ -3,6 +3,7 @@ package users
 import (
 	"github.com/dewciu/timetrove_api/pkg/common"
 	"github.com/dewciu/timetrove_api/pkg/middleware"
+	"github.com/dewciu/timetrove_api/pkg/permissions"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -11,10 +12,11 @@ import (
 
 type UserModel struct {
 	common.BaseModel
-	Username string `gorm:"unique;not null; type:varchar(255)" json:"username"`
-	Email    string `gorm:"unique;not null; type:varchar(255)" json:"email"`
-	Password string `gorm:"not null" json:"password"`
-	Token    string `gorm:"-" json:"token"`
+	Username    string                         `gorm:"unique;not null; type:varchar(255)" json:"username"`
+	Email       string                         `gorm:"unique;not null; type:varchar(255)" json:"email"`
+	Password    string                         `gorm:"not null" json:"password"`
+	Token       string                         `gorm:"-" json:"token"`
+	Permissions []*permissions.PermissionModel `gorm:"many2many:user_permissions;"`
 } //@name User
 
 func (u *UserModel) TableName() string {
