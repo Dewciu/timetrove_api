@@ -6,8 +6,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	UsersEndpoint = "/users"
+	AuthEndpoint  = "/auth"
+	LoginEndpoint = "/login"
+)
+
 func AddUsersRoutes(rg *gin.RouterGroup) {
-	users := rg.Group("/users")
+	users := rg.Group(UsersEndpoint)
 	{
 		users.GET("/", middleware.AuthMiddleware(), GetAllUsersController)
 		users.POST("/", middleware.AuthMiddleware(), CreateUserController)
@@ -18,8 +24,8 @@ func AddUsersRoutes(rg *gin.RouterGroup) {
 }
 
 func AddAuthRoutes(rg *gin.RouterGroup) {
-	auth := rg.Group("/auth")
+	auth := rg.Group(AuthEndpoint)
 	{
-		auth.POST("/login", LoginController)
+		auth.POST(LoginEndpoint, LoginController)
 	}
 }
