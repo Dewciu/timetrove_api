@@ -15,7 +15,7 @@ type UserModel struct {
 	Username    string                         `gorm:"unique;not null; type:varchar(255)" json:"username"`
 	Email       string                         `gorm:"unique;not null; type:varchar(255)" json:"email"`
 	Password    string                         `gorm:"not null" json:"password"`
-	Token       string                         `gorm:"-" json:"token"`
+	Token       string                         `gorm:"unique" json:"token"`
 	Permissions []*permissions.PermissionModel `gorm:"many2many:user_permissions;"`
 } //@name User
 
@@ -43,7 +43,7 @@ func (u *UserModel) LoginCheck() (string, error) {
 
 	var user UserModel
 
-	result := common.DB.Model(&UserModel{}).Where("username = ?", u.Username).First(&user)
+	result := common.DB.Model(&user).Where("username = ?", u.Username).First(&user)
 	err := result.Error
 
 	if err != nil {
@@ -56,8 +56,15 @@ func (u *UserModel) LoginCheck() (string, error) {
 		return "", err
 	}
 
-	token, err := middleware.GenerateToken(u.ID)
+	token, err := middleware.GenerateToken(user.ID)
 
+	user.Token = token
+
+	if err != nil {
+		return "", err
+	}
+
+	err = common.DB.Model(&user).Where("id = ?", user.ID).Updates(user).Error
 	if err != nil {
 		return "", err
 	}

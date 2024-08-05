@@ -93,3 +93,12 @@ func GetPermissionsForUserQuery(user UserModel) ([]perm.PermissionModel, error) 
 
 	return permissions, nil
 }
+
+func GetUserByTokenQuery(token string) (UserModel, error) {
+	var user UserModel
+	err := common.DB.Where("token = ?", token).First(&user).Error
+	if err != nil {
+		return UserModel{}, err
+	}
+	return user, nil
+}

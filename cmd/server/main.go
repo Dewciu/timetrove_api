@@ -97,7 +97,7 @@ func Seed() error {
 	if common.DB.First(&users.UserModel{}, "username = ?", adminName).RowsAffected <= 0 {
 		err := users.CreateUserQuery(users.UserModel{
 			Username: adminName,
-			Password: "$2a$10$Zyy2bxGCIyqj51cdQDs9zuhDaUux9bTFgUnqsKbJuLtaGUCDGWgG2",
+			Password: "admin",
 		})
 		if err != nil {
 			return err
