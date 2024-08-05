@@ -1,7 +1,6 @@
 package users
 
 import (
-	"github.com/dewciu/timetrove_api/pkg/permissions"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -41,22 +40,6 @@ func (s *UsersSerializer) Response() []UserResponse {
 	}
 
 	return response
-}
-
-type UserWithPermissionsResponse struct {
-	ID          uuid.UUID `json:"id"`
-	Username    string    `json:"username"`
-	Permissions []permissions.PermissionModel
-} //@name UserWithPermissionsResponse
-
-type PermissionsForUserSerializer struct {
-	C *gin.Context
-	UserModel
-	Permissions []permissions.PermissionModel
-}
-
-func (s *PermissionsForUserSerializer) Response() []permissions.PermissionModel {
-	return s.Permissions
 }
 
 type TokenResponse struct {

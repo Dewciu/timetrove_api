@@ -289,7 +289,10 @@ const docTemplate = `{
                     "200": {
                         "description": "Returns user's permissions",
                         "schema": {
-                            "$ref": "#/definitions/UserResponse"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PermissionResponse"
+                            }
                         }
                     }
                 }
@@ -308,6 +311,20 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "PermissionResponse": {
+            "type": "object",
+            "properties": {
+                "endpoint": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "method": {
                     "type": "string"
                 }
             }

@@ -10,6 +10,15 @@ definitions:
     - password
     - username
     type: object
+  PermissionResponse:
+    properties:
+      endpoint:
+        type: string
+      id:
+        type: string
+      method:
+        type: string
+    type: object
   TokenResponse:
     properties:
       token:
@@ -232,7 +241,9 @@ paths:
         "200":
           description: Returns user's permissions
           schema:
-            $ref: '#/definitions/UserResponse'
+            items:
+              $ref: '#/definitions/PermissionResponse'
+            type: array
       security:
       - ApiKeyAuth: []
       summary: Retrieve Permissions for the user by ID

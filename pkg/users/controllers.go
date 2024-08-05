@@ -7,6 +7,7 @@ import (
 
 	_ "github.com/dewciu/timetrove_api/docs"
 	"github.com/dewciu/timetrove_api/pkg/common"
+	perm "github.com/dewciu/timetrove_api/pkg/permissions"
 	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
@@ -216,7 +217,7 @@ func UpdateUserController(c *gin.Context) {
 // @Produce json
 // @Security ApiKeyAuth
 // @Param id path string true "User ID"
-// @Success 200 {object} UserResponse "Returns user's permissions"
+// @Success 200 {object} []PermissionResponse "Returns user's permissions"
 // @Router /users/{id}/permissions [get]
 func GetUserWithPermissionsController(c *gin.Context) {
 	id := c.Param("id")
@@ -233,6 +234,6 @@ func GetUserWithPermissionsController(c *gin.Context) {
 		return
 	}
 
-	serializer := PermissionsForUserSerializer{C: c, UserModel: user, Permissions: permissions}
+	serializer := perm.PermissionsSerializer{C: c, Permissions: permissions}
 	c.JSON(http.StatusOK, serializer.Response())
 }
