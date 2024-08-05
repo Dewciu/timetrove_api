@@ -82,17 +82,11 @@ func UpdateUserByIdQuery(id string, userToUpdate UserUpdateModelValidator) (User
 	return user, nil
 }
 
-func GetPermissionsByUserIDQuery(id string) ([]perm.PermissionModel, error) {
+func GetPermissionsForUserQuery(user UserModel) ([]perm.PermissionModel, error) {
 
-	var user UserModel
 	var permissions []perm.PermissionModel
 
-	err := common.DB.Where("id = ?", id).Find(&user).Error
-	if err != nil {
-		return []perm.PermissionModel{}, err
-	}
-
-	err = common.DB.Model(&user).Association("Permissions").Find(&permissions)
+	err := common.DB.Model(&user).Association("Permissions").Find(&permissions)
 	if err != nil {
 		return []perm.PermissionModel{}, err
 	}

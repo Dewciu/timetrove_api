@@ -223,12 +223,12 @@ func GetUserWithPermissionsController(c *gin.Context) {
 
 	user, err := GetUserByIdQuery(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, common.NewError("permissions", errors.New("user not found")))
+		c.JSON(http.StatusNotFound, common.NewError("user", errors.New("user not found")))
 		return
 	}
 
-	permissions, err := GetPermissionsByUserIDQuery(id)
-	if err != nil {
+	permissions, err := GetPermissionsForUserQuery(user)
+	if err != nil || len(permissions) == 0 {
 		c.JSON(http.StatusNotFound, common.NewError("permissions", errors.New("permissions not found")))
 		return
 	}
